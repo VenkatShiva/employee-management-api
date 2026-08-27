@@ -1,9 +1,17 @@
 package com.shiva.employee.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Employee {
 
-    private Long id;
+    @NotNull
+    private final Long id;
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String department;
 
     public Employee(Long id, String name, String department) {
