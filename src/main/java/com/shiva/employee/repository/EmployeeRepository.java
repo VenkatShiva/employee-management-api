@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.shiva.employee.exception.EmployeeAlreadyExistException;
+import com.shiva.employee.exception.EmployeeNotFoundException;
 import com.shiva.employee.model.Employee;
 
 @Repository
@@ -38,6 +39,14 @@ public class EmployeeRepository {
             throw new EmployeeAlreadyExistException("Employee id already present");
         }
         this.employees.add(employee);
+    }
+
+    public void delete(Long id) {
+        Optional<Employee> optionalEmp = findById(id);
+        if (optionalEmp.isEmpty()) {
+            throw new EmployeeNotFoundException("Employee not present");
+        }
+        this.employees.removeIf(emp -> Objects.equals(emp.getId(), id));
     }
 
 }

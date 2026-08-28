@@ -32,4 +32,9 @@ public class EmployeeService {
         });
     }
 
+    public void deleteEmployee(Long id) {
+
+        this.employeeRepository.delete(id);
+    }
+
 }
