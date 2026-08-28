@@ -1,5 +1,7 @@
 package com.shiva.employee.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.shiva.employee.model.Employee;
@@ -17,6 +19,10 @@ public class EmployeeService {
     public void addEmployee(Employee employee) {
 
         this.employeeRepository.save(employee);
+    }
+
+    public List<Employee> getAllEmployees() {
+        return this.employeeRepository.findAll();
     }
 
 }

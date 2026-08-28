@@ -1,5 +1,11 @@
 package com.shiva.employee.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,10 +30,19 @@ public class EmployeeController {
         return "Employee Management API is running";
     }
 
+    @GetMapping("/employees")
+    public ResponseEntity<List<Employee>> getEmployees() {
+        return new ResponseEntity<>(this.employeeService.getAllEmployees(), HttpStatus.OK);
+    }
+
     @PostMapping("/employees")
-    public String addEmployee(@Valid @RequestBody Employee employee) {
+    public ResponseEntity<Map<String, String>> addEmployee(@Valid @RequestBody Employee employee) {
+        Map<String, String> resp = new HashMap<>();
         this.employeeService.addEmployee(employee);
-        return "Employee added successfully";
+
+        resp.put("status", "Success");
+
+        return new ResponseEntity<>(resp, HttpStatus.CREATED);
     }
 
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.shiva.employee.exception.EmployeeAlreadyExistException;
+
 import tools.jackson.databind.exc.InvalidFormatException;
 
 @RestControllerAdvice
@@ -41,6 +43,21 @@ public class GlobalExceptionHandler {
 
         errMap.put("error", "Invalid payload");
         return new ResponseEntity<>(errMap, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmployeeAlreadyExistException.class)
+    public ResponseEntity<Map<String, String>> employeeAlreadyExist(EmployeeAlreadyExistException exception) {
+        Map<String, String> errMap = new HashMap<>();
+        errMap.put("error", exception.getMessage());
+        return new ResponseEntity<>(errMap, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> somethingWentWrong(Exception exception) {
+        Map<String, String> errMap = new HashMap<>();
+        errMap.put("error", "Something went wrong");
+        errMap.put("message", exception.getMessage());
+        return new ResponseEntity<>(errMap, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
