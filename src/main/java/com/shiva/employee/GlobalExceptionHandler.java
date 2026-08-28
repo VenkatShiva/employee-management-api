@@ -21,24 +21,26 @@ public class GlobalExceptionHandler {
         exception.getBindingResult().getFieldErrors().forEach(error -> {
             errMap.put(error.getField(), error.getDefaultMessage());
         });
-        System.out.println(errMap);
         return new ResponseEntity<>(errMap, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, String>> payloadCoversion(HttpMessageNotReadableException exception) {
+    public ResponseEntity<Map<String, String>> payloadConversion(HttpMessageNotReadableException exception) {
 
         Map<String, String> errMap = new HashMap<>();
         Throwable cause = exception.getMostSpecificCause();
 
-        errMap.put("error", "Invalid payload");
-
         if (cause instanceof InvalidFormatException invalidFormatException) {
-            errMap.put("error", invalidFormatException.getValue().toString() + " is not appropriate value") ;
+            invalidFormatException.getPath()
+                    .stream()
+                    .forEach(err -> {
+                        errMap.put(err.getPropertyName(), "Invalid value");
+                    });
+            return new ResponseEntity<>(errMap, HttpStatus.BAD_REQUEST);
         }
 
+        errMap.put("error", "Invalid payload");
         return new ResponseEntity<>(errMap, HttpStatus.BAD_REQUEST);
-
     }
 
 }
