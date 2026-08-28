@@ -10,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import tools.jackson.databind.exc.InvalidFormatException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -27,7 +29,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> payloadCoversion(HttpMessageNotReadableException exception) {
 
         Map<String, String> errMap = new HashMap<>();
-        System.out.println(exception.getLocalizedMessage());
+        Throwable cause = exception.getMostSpecificCause();
+
+        errMap.put("error", "Invalid payload");
+
+        if (cause instanceof InvalidFormatException invalidFormatException) {
+            errMap.put("error", invalidFormatException.getValue().toString() + " is not appropriate value") ;
+        }
+
         return new ResponseEntity<>(errMap, HttpStatus.BAD_REQUEST);
 
     }
