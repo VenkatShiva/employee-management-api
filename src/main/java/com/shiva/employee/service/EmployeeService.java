@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.shiva.employee.exception.EmployeeNotFoundException;
 import com.shiva.employee.model.Employee;
 import com.shiva.employee.repository.EmployeeRepository;
 
@@ -23,6 +24,12 @@ public class EmployeeService {
 
     public List<Employee> getAllEmployees() {
         return this.employeeRepository.findAll();
+    }
+
+    public Employee getEmployee(Long id) {
+        return this.employeeRepository.findById(id).orElseThrow(() -> {
+            throw new EmployeeNotFoundException("Employee not found");
+        });
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.shiva.employee.exception.EmployeeAlreadyExistException;
+import com.shiva.employee.exception.EmployeeNotFoundException;
 
 import tools.jackson.databind.exc.InvalidFormatException;
 
@@ -52,11 +53,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errMap, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public ResponseEntity<Map<String, String>> employeeNotFound(EmployeeNotFoundException exception) {
+        Map<String, String> errMap = new HashMap<>();
+        errMap.put("error", exception.getMessage());
+        return new ResponseEntity<>(errMap, HttpStatus.NOT_FOUND);
+    }
+
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> somethingWentWrong(Exception exception) {
+    public ResponseEntity<Map<String, String>> somethingWentWrong() {
         Map<String, String> errMap = new HashMap<>();
         errMap.put("error", "Something went wrong");
-        errMap.put("message", exception.getMessage());
         return new ResponseEntity<>(errMap, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
