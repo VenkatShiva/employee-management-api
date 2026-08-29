@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import com.shiva.employee.dto.EmployeeRecord;
 import com.shiva.employee.exception.EmployeeAlreadyExistException;
 import com.shiva.employee.exception.EmployeeNotFoundException;
 import com.shiva.employee.model.Employee;
@@ -34,7 +35,7 @@ public class EmployeeRepository {
     }
 
     public void save(Employee employee) {
-        Optional<Employee> optionalEmp = findById(employee.getId());
+        Optional<Employee> optionalEmp = this.findById(employee.getId());
         if (optionalEmp.isPresent()) {
             throw new EmployeeAlreadyExistException("Employee id already present");
         }
@@ -42,11 +43,20 @@ public class EmployeeRepository {
     }
 
     public void delete(Long id) {
-        Optional<Employee> optionalEmp = findById(id);
+        Optional<Employee> optionalEmp = this.findById(id);
         if (optionalEmp.isEmpty()) {
             throw new EmployeeNotFoundException("Employee not present");
         }
         this.employees.removeIf(emp -> Objects.equals(emp.getId(), id));
+    }
+
+    public void update(Long id, EmployeeRecord record) {
+        Optional<Employee> optionalEmp = this.findById(id);
+        Employee employee = optionalEmp.orElseThrow(() -> {
+            throw new EmployeeNotFoundException("Employee not present");
+        });
+        employee.setName(record.name());
+        employee.setDepartment(record.department());
     }
 
 }

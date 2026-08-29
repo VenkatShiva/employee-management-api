@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.shiva.employee.dto.EmployeeRecord;
 import com.shiva.employee.exception.EmployeeNotFoundException;
 import com.shiva.employee.model.Employee;
 import com.shiva.employee.repository.EmployeeRepository;
@@ -35,6 +36,10 @@ public class EmployeeService {
     public void deleteEmployee(Long id) {
 
         this.employeeRepository.delete(id);
+    }
+
+    public void updateEmployee(Long id, EmployeeRecord record) {
+        this.employeeRepository.update(id, record);
     }
 
 }

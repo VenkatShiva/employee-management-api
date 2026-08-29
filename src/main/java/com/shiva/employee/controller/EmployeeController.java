@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shiva.employee.dto.EmployeeRecord;
 import com.shiva.employee.model.Employee;
 import com.shiva.employee.service.EmployeeService;
 
@@ -56,6 +58,15 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         this.employeeService.deleteEmployee(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/employees/{id}")
+    public ResponseEntity<Map<String, String>> updateEmployee(@PathVariable Long id,
+            @Valid @RequestBody EmployeeRecord record) {
+        Map<String, String> resp = new HashMap<>();
+        this.employeeService.updateEmployee(id, record);
+        resp.put("status", "Success");
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
 }
