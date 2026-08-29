@@ -1,12 +1,17 @@
 package com.shiva.employee.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
+@Entity
 public class Employee {
 
-    @NotNull
-    private final Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank
     private String name;
@@ -14,8 +19,10 @@ public class Employee {
     @NotBlank
     private String department;
 
-    public Employee(Long id, String name, String department) {
-        this.id = id;
+    protected Employee() {
+    }
+
+    public Employee(String name, String department) {
         this.name = name;
         this.department = department;
     }

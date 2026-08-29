@@ -13,8 +13,6 @@ import com.shiva.employee.repository.EmployeeRepository;
 @Service
 public class EmployeeService {
 
-    private Long nextId = 0L;
-
     private final EmployeeRepository employeeRepository;
 
     public EmployeeService(EmployeeRepository employeeRepository) {
@@ -22,7 +20,7 @@ public class EmployeeService {
     }
 
     public void addEmployee(CreateEmployeeRequest createRequest) {
-        Employee employee = new Employee(++nextId, createRequest.name(), createRequest.department());
+        Employee employee = new Employee(createRequest.name(), createRequest.department());
         this.employeeRepository.save(employee);
     }
 
@@ -37,8 +35,10 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
-
-        this.employeeRepository.delete(id);
+        Employee emp = this.employeeRepository.findById(id).orElseThrow(() -> {
+            throw new EmployeeNotFoundException("Employee not found");
+        });
+        this.employeeRepository.delete(emp);
     }
 
     public void updateEmployee(Long id, UpdateEmployeeRequest updateRequest) {
@@ -50,6 +50,7 @@ public class EmployeeService {
         employee.setName(updateRequest.name());
         employee.setDepartment(updateRequest.department());
 
+        this.employeeRepository.save(employee);
     }
 
 }
