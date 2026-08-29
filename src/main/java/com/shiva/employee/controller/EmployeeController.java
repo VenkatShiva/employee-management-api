@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shiva.employee.dto.EmployeeRecord;
+import com.shiva.employee.dto.CreateEmployeeRequest;
+import com.shiva.employee.dto.UpdateEmployeeRequest;
 import com.shiva.employee.model.Employee;
 import com.shiva.employee.service.EmployeeService;
 
@@ -40,7 +41,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public ResponseEntity<Map<String, String>> addEmployee(@Valid @RequestBody Employee employee) {
+    public ResponseEntity<Map<String, String>> addEmployee(@Valid @RequestBody CreateEmployeeRequest employee) {
         Map<String, String> resp = new HashMap<>();
         this.employeeService.addEmployee(employee);
 
@@ -62,9 +63,9 @@ public class EmployeeController {
 
     @PutMapping("/employees/{id}")
     public ResponseEntity<Map<String, String>> updateEmployee(@PathVariable Long id,
-            @Valid @RequestBody EmployeeRecord record) {
+            @Valid @RequestBody UpdateEmployeeRequest updateRequest) {
         Map<String, String> resp = new HashMap<>();
-        this.employeeService.updateEmployee(id, record);
+        this.employeeService.updateEmployee(id, updateRequest);
         resp.put("status", "Success");
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
