@@ -20,7 +20,7 @@ public class EmployeeService {
     }
 
     public void addEmployee(CreateEmployeeRequest createRequest) {
-        Employee employee = new Employee(createRequest.name(), createRequest.department());
+        Employee employee = new Employee(createRequest.name(), createRequest.department(), createRequest.salary());
         this.employeeRepository.save(employee);
     }
 
@@ -49,6 +49,7 @@ public class EmployeeService {
 
         employee.setName(updateRequest.name());
         employee.setDepartment(updateRequest.department());
+        employee.setSalary(updateRequest.salary());
 
         this.employeeRepository.save(employee);
     }
@@ -63,6 +64,18 @@ public class EmployeeService {
 
     public List<Employee> getByNameAndDepartment(String name, String department) {
         return this.employeeRepository.findByNameAndDepartment(name, department);
+    }
+
+    public List<Employee> getByNameContains(String name) {
+        return this.employeeRepository.findByNameContaining(name);
+    }
+
+    public List<Employee> getBySalaryGreaterThan(Long salary) {
+        return this.employeeRepository.findBySalaryGreaterThan(salary);
+    }
+
+    public List<Employee> getByDepartmentOrderBySalaryDesc(String department) {
+        return this.employeeRepository.findByDepartmentOrderBySalaryDesc(department);
     }
 
 }

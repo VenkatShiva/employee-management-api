@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Employee {
@@ -19,12 +20,16 @@ public class Employee {
     @NotBlank
     private String department;
 
+    @NotNull
+    private Long salary;
+
     protected Employee() {
     }
 
-    public Employee(String name, String department) {
+    public Employee(String name, String department, Long salary) {
         this.name = name;
         this.department = department;
+        this.salary = salary;
     }
 
     public Long getId() {
@@ -45,5 +50,13 @@ public class Employee {
 
     public String getDepartment() {
         return this.department;
+    }
+
+    public void setSalary(Long salary) {
+        this.salary = salary;
+    }
+
+    public Long getSalary() {
+        return this.salary;
     }
 }

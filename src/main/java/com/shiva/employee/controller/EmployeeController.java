@@ -21,6 +21,8 @@ import com.shiva.employee.model.Employee;
 import com.shiva.employee.service.EmployeeService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 public class EmployeeController {
@@ -43,11 +45,27 @@ public class EmployeeController {
         if (name != null && department != null && !name.isBlank() && !department.isBlank()) {
             return new ResponseEntity<>(this.employeeService.getByNameAndDepartment(name, department), HttpStatus.OK);
         } else if (name != null && !name.isBlank()) {
-            return new ResponseEntity<>(this.employeeService.getByName(department), HttpStatus.OK);
+            return new ResponseEntity<>(this.employeeService.getByName(name), HttpStatus.OK);
         } else if (department != null && !department.isBlank()) {
             return new ResponseEntity<>(this.employeeService.getByDepartment(department), HttpStatus.OK);
         }
         return new ResponseEntity<>(this.employeeService.getAllEmployees(), HttpStatus.OK);
+    }
+
+    @GetMapping("/employees/search")
+    public ResponseEntity<List<Employee>> searchByName(@Valid @RequestParam @NotBlank String name) {
+        return ResponseEntity.ok(this.employeeService.getByNameContains(name));
+    }
+
+    @GetMapping("/employees/search/salary")
+    public ResponseEntity<List<Employee>> searchBySalary(@Valid @RequestParam @NotNull Long min) {
+        return ResponseEntity.ok(this.employeeService.getBySalaryGreaterThan(min));
+    }
+
+    @GetMapping("/employees/search/department")
+    public ResponseEntity<List<Employee>> searchByDepartmentOrderBySalaryDesc(
+            @Valid @RequestParam @NotBlank String department) {
+        return ResponseEntity.ok(this.employeeService.getByDepartmentOrderBySalaryDesc(department));
     }
 
     @PostMapping("/employees")
