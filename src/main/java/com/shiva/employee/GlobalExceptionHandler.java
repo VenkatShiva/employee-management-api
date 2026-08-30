@@ -60,11 +60,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errMap, HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> somethingWentWrong() {
+    public ResponseEntity<Map<String, String>> somethingWentWrong(Exception e) {
         Map<String, String> errMap = new HashMap<>();
         errMap.put("error", "Something went wrong");
+        System.err.println(e.getMessage());
         return new ResponseEntity<>(errMap, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

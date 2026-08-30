@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shiva.employee.dto.CreateEmployeeRequest;
@@ -36,7 +37,16 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<List<Employee>> getEmployees() {
+    public ResponseEntity<List<Employee>> getEmployeesFilter(@RequestParam(required = false) String name,
+            @RequestParam(required = false) String department) {
+
+        if (name != null && department != null && !name.isBlank() && !department.isBlank()) {
+            return new ResponseEntity<>(this.employeeService.getByNameAndDepartment(name, department), HttpStatus.OK);
+        } else if (name != null && !name.isBlank()) {
+            return new ResponseEntity<>(this.employeeService.getByName(department), HttpStatus.OK);
+        } else if (department != null && !department.isBlank()) {
+            return new ResponseEntity<>(this.employeeService.getByDepartment(department), HttpStatus.OK);
+        }
         return new ResponseEntity<>(this.employeeService.getAllEmployees(), HttpStatus.OK);
     }
 

@@ -53,4 +53,16 @@ public class EmployeeService {
         this.employeeRepository.save(employee);
     }
 
+    public List<Employee> getByName(String name) {
+        return this.employeeRepository.findByName(name);
+    }
+
+    public List<Employee> getByDepartment(String department) {
+        return this.employeeRepository.findByDepartment(department);
+    }
+
+    public List<Employee> getByNameAndDepartment(String name, String department) {
+        return this.employeeRepository.findByNameAndDepartment(name, department);
+    }
+
 }
