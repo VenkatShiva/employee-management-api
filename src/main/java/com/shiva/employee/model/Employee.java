@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,8 +19,9 @@ public class Employee {
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String department;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
 
     @NotNull
     private Long salary;
@@ -26,7 +29,7 @@ public class Employee {
     protected Employee() {
     }
 
-    public Employee(String name, String department, Long salary) {
+    public Employee(String name, Department department, Long salary) {
         this.name = name;
         this.department = department;
         this.salary = salary;
@@ -44,11 +47,11 @@ public class Employee {
         return this.name;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 
-    public String getDepartment() {
+    public Department getDepartment() {
         return this.department;
     }
 

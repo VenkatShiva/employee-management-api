@@ -11,6 +11,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.shiva.employee.exception.DepartmentNotFoundException;
 import com.shiva.employee.exception.EmployeeAlreadyExistException;
 import com.shiva.employee.exception.EmployeeNotFoundException;
 
@@ -75,8 +76,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errMap, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(EmployeeNotFoundException.class)
-    public ResponseEntity<Map<String, String>> employeeNotFound(EmployeeNotFoundException exception) {
+    @ExceptionHandler({ EmployeeNotFoundException.class, DepartmentNotFoundException.class })
+    public ResponseEntity<Map<String, String>> employeeNotFound(Exception exception) {
         Map<String, String> errMap = new HashMap<>();
         errMap.put("error", exception.getMessage());
         return new ResponseEntity<>(errMap, HttpStatus.NOT_FOUND);
