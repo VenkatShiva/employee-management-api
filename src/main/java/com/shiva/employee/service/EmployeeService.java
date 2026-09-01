@@ -1,6 +1,7 @@
 package com.shiva.employee.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -8,20 +9,27 @@ import com.shiva.employee.dto.CreateEmployeeRequest;
 import com.shiva.employee.dto.UpdateEmployeeRequest;
 import com.shiva.employee.exception.DepartmentNotFoundException;
 import com.shiva.employee.exception.EmployeeNotFoundException;
+import com.shiva.employee.exception.SkillAlreadyExistException;
+import com.shiva.employee.exception.SkillNotFoundException;
 import com.shiva.employee.model.Department;
 import com.shiva.employee.model.Employee;
+import com.shiva.employee.model.Skill;
 import com.shiva.employee.repository.DepartmentRepository;
 import com.shiva.employee.repository.EmployeeRepository;
+import com.shiva.employee.repository.SkillRepository;
 
 @Service
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
+    private final SkillRepository skillRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository,
+            SkillRepository skillRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
+        this.skillRepository = skillRepository;
     }
 
     public void addEmployee(CreateEmployeeRequest createRequest) {
@@ -71,7 +79,6 @@ public class EmployeeService {
     }
 
     public List<Employee> getByNameAndDepartment(String name, String department) {
-        System.err.println("--->>>" + department);
         return this.employeeRepository.findByNameAndDepartment_Name(name, department);
     }
 
@@ -85,6 +92,31 @@ public class EmployeeService {
 
     public List<Employee> getByDepartmentOrderBySalaryDesc(String department) {
         return this.employeeRepository.findByDepartment_NameOrderBySalaryDesc(department);
+    }
+
+    public void addSkill(Long id, String skillName) {
+        Employee employee = this.employeeRepository.findById(id).orElseThrow(() -> {
+            throw new EmployeeNotFoundException("Employee not found");
+        });
+
+        List<Skill> allSkills = employee.getSkills();
+
+        Optional<Skill> firstSkill = allSkills.stream()
+                .filter((Skill skl) -> skl.getName().equals(skillName))
+                .findFirst();
+        if (firstSkill.isPresent()) {
+            throw new SkillAlreadyExistException("Skill already exists");
+        }
+        Skill skill = this.skillRepository.findByName(skillName)
+                .orElseThrow(() -> new SkillNotFoundException("Skill not found"));
+
+        employee.addSkill(skill);
+
+        this.employeeRepository.save(employee);
+    }
+
+     public List<Employee> getBySkill(String skillName) {
+        return this.employeeRepository.findBySkills_Name(skillName);
     }
 
 }
