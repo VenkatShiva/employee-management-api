@@ -18,6 +18,8 @@ import com.shiva.employee.repository.DepartmentRepository;
 import com.shiva.employee.repository.EmployeeRepository;
 import com.shiva.employee.repository.SkillRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class EmployeeService {
 
@@ -94,6 +96,7 @@ public class EmployeeService {
         return this.employeeRepository.findByDepartment_NameOrderBySalaryDesc(department);
     }
 
+    @Transactional
     public void addSkill(Long id, String skillName) {
         Employee employee = this.employeeRepository.findById(id).orElseThrow(() -> {
             throw new EmployeeNotFoundException("Employee not found");
