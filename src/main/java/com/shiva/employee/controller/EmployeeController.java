@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shiva.employee.dto.AddSkillRequest;
 import com.shiva.employee.dto.CreateEmployeeRequest;
+import com.shiva.employee.dto.EmployeeResponse;
 import com.shiva.employee.dto.UpdateEmployeeRequest;
-import com.shiva.employee.model.Employee;
 import com.shiva.employee.service.EmployeeService;
 
 import jakarta.validation.Valid;
@@ -42,7 +42,7 @@ public class EmployeeController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Employee>> getEmployeesFilter(@RequestParam(required = false) String name,
+    public ResponseEntity<List<EmployeeResponse>> getEmployeesFilter(@RequestParam(required = false) String name,
             @RequestParam(required = false) String department) {
 
         if (name != null && department != null && !name.isBlank() && !department.isBlank()) {
@@ -56,17 +56,17 @@ public class EmployeeController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Employee>> searchByName(@Valid @RequestParam @NotBlank String name) {
+    public ResponseEntity<List<EmployeeResponse>> searchByName(@Valid @RequestParam @NotBlank String name) {
         return ResponseEntity.ok(this.employeeService.getByNameContains(name));
     }
 
     @GetMapping("/search/salary")
-    public ResponseEntity<List<Employee>> searchBySalary(@Valid @RequestParam @NotNull Long min) {
+    public ResponseEntity<List<EmployeeResponse>> searchBySalary(@Valid @RequestParam @NotNull Long min) {
         return ResponseEntity.ok(this.employeeService.getBySalaryGreaterThan(min));
     }
 
     @GetMapping("/search/department")
-    public ResponseEntity<List<Employee>> searchByDepartmentOrderBySalaryDesc(
+    public ResponseEntity<List<EmployeeResponse>> searchByDepartmentOrderBySalaryDesc(
             @Valid @RequestParam @NotBlank String department) {
         return ResponseEntity.ok(this.employeeService.getByDepartmentOrderBySalaryDesc(department));
     }
@@ -82,7 +82,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable Long id) {
+    public ResponseEntity<EmployeeResponse> getEmployee(@PathVariable Long id) {
         return new ResponseEntity<>(this.employeeService.getEmployee(id), HttpStatus.OK);
     }
 
@@ -111,7 +111,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/search/skill")
-    public ResponseEntity<List<Employee>> searchBySkill(
+    public ResponseEntity<List<EmployeeResponse>> searchBySkill(
             @Valid @RequestParam @NotBlank String name) {
         return ResponseEntity.ok(this.employeeService.getBySkill(name));
     }

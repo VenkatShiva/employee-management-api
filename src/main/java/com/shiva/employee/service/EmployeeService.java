@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.shiva.employee.dto.CreateEmployeeRequest;
+import com.shiva.employee.dto.EmployeeResponse;
 import com.shiva.employee.dto.UpdateEmployeeRequest;
 import com.shiva.employee.exception.DepartmentNotFoundException;
 import com.shiva.employee.exception.EmployeeNotFoundException;
@@ -34,6 +35,16 @@ public class EmployeeService {
         this.skillRepository = skillRepository;
     }
 
+    private static EmployeeResponse convertEmpToResponse(Employee emp) {
+        return new EmployeeResponse(emp.getId(), emp.getName(), emp.getSalary());
+    }
+
+    private static List<EmployeeResponse> convertEmployeesToResponses(List<Employee> employees) {
+        return employees.stream()
+                .map(EmployeeService::convertEmpToResponse)
+                .toList();
+    }
+
     public void addEmployee(CreateEmployeeRequest createRequest) {
         Department department = this.departmentRepository.findByName(createRequest.department())
                 .orElseThrow(() -> new DepartmentNotFoundException("Department not exist"));
@@ -41,14 +52,15 @@ public class EmployeeService {
         this.employeeRepository.save(employee);
     }
 
-    public List<Employee> getAllEmployees() {
-        return this.employeeRepository.findAll();
+    public List<EmployeeResponse> getAllEmployees() {
+        return convertEmployeesToResponses(this.employeeRepository.findAll());
     }
 
-    public Employee getEmployee(Long id) {
-        return this.employeeRepository.findById(id).orElseThrow(() -> {
+    public EmployeeResponse getEmployee(Long id) {
+        Employee emp = this.employeeRepository.findById(id).orElseThrow(() -> {
             throw new EmployeeNotFoundException("Employee not found");
         });
+        return convertEmpToResponse(emp);
     }
 
     public void deleteEmployee(Long id) {
@@ -72,28 +84,28 @@ public class EmployeeService {
         this.employeeRepository.save(employee);
     }
 
-    public List<Employee> getByName(String name) {
-        return this.employeeRepository.findByName(name);
+    public List<EmployeeResponse> getByName(String name) {
+        return convertEmployeesToResponses(this.employeeRepository.findByName(name));
     }
 
-    public List<Employee> getByDepartment(String department) {
-        return this.employeeRepository.findByDepartment_Name(department);
+    public List<EmployeeResponse> getByDepartment(String department) {
+        return convertEmployeesToResponses(this.employeeRepository.findByDepartment_Name(department));
     }
 
-    public List<Employee> getByNameAndDepartment(String name, String department) {
-        return this.employeeRepository.findByNameAndDepartment_Name(name, department);
+    public List<EmployeeResponse> getByNameAndDepartment(String name, String department) {
+        return convertEmployeesToResponses(this.employeeRepository.findByNameAndDepartment_Name(name, department));
     }
 
-    public List<Employee> getByNameContains(String name) {
-        return this.employeeRepository.findByNameContaining(name);
+    public List<EmployeeResponse> getByNameContains(String name) {
+        return convertEmployeesToResponses(this.employeeRepository.findByNameContaining(name));
     }
 
-    public List<Employee> getBySalaryGreaterThan(Long salary) {
-        return this.employeeRepository.findBySalaryGreaterThan(salary);
+    public List<EmployeeResponse> getBySalaryGreaterThan(Long salary) {
+        return convertEmployeesToResponses(this.employeeRepository.findBySalaryGreaterThan(salary));
     }
 
-    public List<Employee> getByDepartmentOrderBySalaryDesc(String department) {
-        return this.employeeRepository.findByDepartment_NameOrderBySalaryDesc(department);
+    public List<EmployeeResponse> getByDepartmentOrderBySalaryDesc(String department) {
+        return convertEmployeesToResponses(this.employeeRepository.findByDepartment_NameOrderBySalaryDesc(department));
     }
 
     @Transactional
@@ -118,8 +130,8 @@ public class EmployeeService {
         this.employeeRepository.save(employee);
     }
 
-     public List<Employee> getBySkill(String skillName) {
-        return this.employeeRepository.findBySkills_Name(skillName);
+    public List<EmployeeResponse> getBySkill(String skillName) {
+        return convertEmployeesToResponses(this.employeeRepository.findBySkills_Name(skillName));
     }
 
 }
