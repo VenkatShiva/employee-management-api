@@ -4,20 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import com.shiva.employee.dto.*;
+import com.shiva.employee.exception.*;
 import org.springframework.stereotype.Service;
 
-import com.shiva.employee.exception.DepartmentNotFoundException;
-import com.shiva.employee.exception.EmployeeNotFoundException;
-import com.shiva.employee.exception.SkillAlreadyExistException;
-import com.shiva.employee.exception.SkillNotFoundException;
 import com.shiva.employee.model.Department;
 import com.shiva.employee.model.Employee;
 import com.shiva.employee.model.Skill;
 import com.shiva.employee.repository.DepartmentRepository;
 import com.shiva.employee.repository.EmployeeRepository;
 import com.shiva.employee.repository.SkillRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class EmployeeService {
@@ -141,4 +138,34 @@ public class EmployeeService {
                 })
                 .toList();
     }
+
+    @Transactional
+    public void addProject(Long id, String projectName) {
+        Employee employee = this.employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found"));
+        employee.getProjects()
+                .stream()
+                .filter(prj -> prj.equalsIgnoreCase(projectName))
+                .findFirst()
+                .ifPresent(prj -> {
+                    throw new ProjectAlreadyExistException("Project already exists");
+                });
+
+        employee.addProject(projectName);
+
+        this.employeeRepository.save(employee);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EmployeeSkillProjectSummaryResponse> getEmployeesWithSkillsAndProjects() {
+        List<Employee> employees = this.employeeRepository.findAllWithSkills();
+        this.employeeRepository.findAllWithProjects();
+        return employees.stream()
+                .map(emp -> {
+                    List<String> skills = emp.getSkills().stream().map(Skill::getName).toList();
+                    List<String> projects = emp.getProjects();
+                    return new EmployeeSkillProjectSummaryResponse(emp.getId(), emp.getName(), skills, projects);
+                })
+                .toList();
+    }
+
 }

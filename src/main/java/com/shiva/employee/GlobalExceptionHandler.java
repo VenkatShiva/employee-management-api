@@ -3,6 +3,7 @@ package com.shiva.employee;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.shiva.employee.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,12 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.shiva.employee.exception.DepartmentNotFoundException;
-import com.shiva.employee.exception.EmployeeAlreadyExistException;
-import com.shiva.employee.exception.EmployeeNotFoundException;
-import com.shiva.employee.exception.SkillAlreadyExistException;
-import com.shiva.employee.exception.SkillNotFoundException;
 
 import jakarta.validation.UnexpectedTypeException;
 import tools.jackson.databind.exc.InvalidFormatException;
@@ -71,15 +66,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errMap, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(EmployeeAlreadyExistException.class)
-    public ResponseEntity<Map<String, String>> employeeAlreadyExist(EmployeeAlreadyExistException exception) {
+    @ExceptionHandler({EmployeeAlreadyExistException.class, SkillAlreadyExistException.class, ProjectAlreadyExistException.class})
+    public ResponseEntity<Map<String, String>> employeeAlreadyExist(Exception exception) {
         Map<String, String> errMap = new HashMap<>();
         errMap.put("error", exception.getMessage());
         return new ResponseEntity<>(errMap, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler({ EmployeeNotFoundException.class, DepartmentNotFoundException.class,
-            SkillNotFoundException.class, SkillAlreadyExistException.class })
+    @ExceptionHandler({EmployeeNotFoundException.class, DepartmentNotFoundException.class,
+            SkillNotFoundException.class})
     public ResponseEntity<Map<String, String>> employeeNotFound(Exception exception) {
         Map<String, String> errMap = new HashMap<>();
         errMap.put("error", exception.getMessage());

@@ -39,8 +39,7 @@ public class EmployeeController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<EmployeeResponse>> getEmployeesFilter(@RequestParam(required = false) String name,
-            @RequestParam(required = false) String department) {
+    public ResponseEntity<List<EmployeeResponse>> getEmployeesFilter(@RequestParam(required = false) String name, @RequestParam(required = false) String department) {
 
         if (name != null && department != null && !name.isBlank() && !department.isBlank()) {
             return new ResponseEntity<>(this.employeeService.getByNameAndDepartment(name, department), HttpStatus.OK);
@@ -91,7 +90,7 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateEmployee(@PathVariable Long id,
-            @Valid @RequestBody UpdateEmployeeRequest updateRequest) {
+                                                              @Valid @RequestBody UpdateEmployeeRequest updateRequest) {
         Map<String, String> resp = new HashMap<>();
         this.employeeService.updateEmployee(id, updateRequest);
         resp.put("status", "Success");
@@ -100,7 +99,7 @@ public class EmployeeController {
 
     @PutMapping("/skill/{id}")
     public ResponseEntity<Map<String, String>> addSkillEmployee(@PathVariable Long id,
-            @Valid @RequestBody AddSkillRequest updateRequest) {
+                                                                @Valid @RequestBody AddSkillRequest updateRequest) {
         Map<String, String> resp = new HashMap<>();
         this.employeeService.addSkill(id, updateRequest.name());
         resp.put("status", "Success");
@@ -122,5 +121,21 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeSkillSummaryResponse>> getEmployeeSkillSummary() {
         return ResponseEntity.ok(this.employeeService.getEmployeesWithSkills());
     }
+
+    @PutMapping("/project/{id}")
+    public ResponseEntity<Map<String, String>> addProjectEmployee(@PathVariable Long id,
+                                                                  @Valid @RequestBody AddProjectRequest updateRequest) {
+        Map<String, String> resp = new HashMap<>();
+        this.employeeService.addProject(id, updateRequest.name());
+        resp.put("status", "Success");
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/skill-project-summary")
+    public ResponseEntity<List<EmployeeSkillProjectSummaryResponse>> getEmployeeSkillAndProjectSummary() {
+        return ResponseEntity.ok(this.employeeService.getEmployeesWithSkillsAndProjects());
+    }
+
 
 }

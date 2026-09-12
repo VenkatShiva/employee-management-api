@@ -28,4 +28,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query("SELECT DISTINCT e FROM Employee e LEFT JOIN FETCH e.skills")
     List<Employee> findAllWithSkills();
+
+    @Query("SELECT DISTINCT e from Employee e LEFT JOIN FETCH e.projects")
+    List<Employee> findAllWithProjects();
 }

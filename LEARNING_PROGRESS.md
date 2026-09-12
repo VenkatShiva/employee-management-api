@@ -89,9 +89,9 @@ Every concept follows a strict 6-step cycle to ensure genuine comprehension and 
 - [x] **Hibernate 5 vs Hibernate 6 Deduplication**
   - [x] Why Hibernate 6 auto-deduplicates in-memory for `JOIN FETCH`
   - [x] When `DISTINCT` is still required (plain `JOIN` filtering, scalar/DTO projections)
-- [ ] **The Cartesian Product Hazard & `MultipleBagFetchException`**
-  - [ ] Why fetching multiple collections in one query fails/explodes
-  - [ ] Mitigation strategies (two-step queries, `Set` vs `List`)
+- [x] **The Cartesian Product Hazard & `MultipleBagFetchException`**
+  - [x] Why fetching multiple collections in one query fails/explodes
+  - [x] Mitigation strategies (two-step queries, `Set` vs `List`)
 
 ---
 

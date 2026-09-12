@@ -3,15 +3,7 @@ package com.shiva.employee.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -35,6 +27,11 @@ public class Employee {
 
     @NotNull
     private Long salary;
+
+    @ElementCollection
+    @CollectionTable(name = "employee_projects", joinColumns = @JoinColumn(name = "employee_id"))
+    @Column(name = "project_name")
+    private List<String> projects = new ArrayList<>();
 
     protected Employee() {
     }
@@ -79,6 +76,14 @@ public class Employee {
 
     public List<Skill> getSkills() {
         return this.skills.stream().toList();
+    }
+
+    public void addProject(String project) {
+        this.projects.add(project);
+    }
+
+    public List<String> getProjects() {
+        return this.projects.stream().toList();
     }
 
 }
