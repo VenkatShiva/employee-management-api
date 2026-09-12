@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.shiva.employee.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,11 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shiva.employee.dto.AddSkillRequest;
-import com.shiva.employee.dto.CreateEmployeeRequest;
-import com.shiva.employee.dto.EmployeeDetailsResponse;
-import com.shiva.employee.dto.EmployeeResponse;
-import com.shiva.employee.dto.UpdateEmployeeRequest;
 import com.shiva.employee.service.EmployeeService;
 
 import jakarta.validation.Valid;
@@ -120,6 +116,11 @@ public class EmployeeController {
     @GetMapping("/details")
     public ResponseEntity<List<EmployeeDetailsResponse>> getEmployeeDetails() {
         return ResponseEntity.ok(this.employeeService.getEmployeeDetails());
+    }
+
+    @GetMapping("/skills-summary")
+    public ResponseEntity<List<EmployeeSkillSummaryResponse>> getEmployeeSkillSummary() {
+        return ResponseEntity.ok(this.employeeService.getEmployeesWithSkills());
     }
 
 }

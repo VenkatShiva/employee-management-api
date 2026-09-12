@@ -3,12 +3,9 @@ package com.shiva.employee.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.shiva.employee.dto.*;
 import org.springframework.stereotype.Service;
 
-import com.shiva.employee.dto.CreateEmployeeRequest;
-import com.shiva.employee.dto.EmployeeDetailsResponse;
-import com.shiva.employee.dto.EmployeeResponse;
-import com.shiva.employee.dto.UpdateEmployeeRequest;
 import com.shiva.employee.exception.DepartmentNotFoundException;
 import com.shiva.employee.exception.EmployeeNotFoundException;
 import com.shiva.employee.exception.SkillAlreadyExistException;
@@ -133,5 +130,15 @@ public class EmployeeService {
                 emp.getDepartment().getName())
         ).toList();
 
+    }
+
+    public List<EmployeeSkillSummaryResponse> getEmployeesWithSkills() {
+        List<Employee> employees = this.employeeRepository.findAllWithSkills();
+        return employees.stream()
+                .map(emp -> {
+                    List<String> skills = emp.getSkills().stream().map(Skill::getName).toList();
+                    return new EmployeeSkillSummaryResponse(emp.getId(), emp.getName(), skills);
+                })
+                .toList();
     }
 }
