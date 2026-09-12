@@ -30,7 +30,7 @@ public class EmployeeService {
     private final SkillRepository skillRepository;
 
     public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository,
-            SkillRepository skillRepository) {
+                           SkillRepository skillRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.skillRepository = skillRepository;
@@ -58,24 +58,18 @@ public class EmployeeService {
     }
 
     public EmployeeResponse getEmployee(Long id) {
-        Employee emp = this.employeeRepository.findById(id).orElseThrow(() -> {
-            throw new EmployeeNotFoundException("Employee not found");
-        });
+        Employee emp = this.employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found"));
         return convertEmpToResponse(emp);
     }
 
     public void deleteEmployee(Long id) {
-        Employee emp = this.employeeRepository.findById(id).orElseThrow(() -> {
-            throw new EmployeeNotFoundException("Employee not found");
-        });
+        Employee emp = this.employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found"));
         this.employeeRepository.delete(emp);
     }
 
     public void updateEmployee(Long id, UpdateEmployeeRequest updateRequest) {
 
-        Employee employee = this.employeeRepository.findById(id).orElseThrow(() -> {
-            throw new EmployeeNotFoundException("Employee not found");
-        });
+        Employee employee = this.employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found"));
         Department department = this.departmentRepository.findByName(updateRequest.department())
                 .orElseThrow(() -> new DepartmentNotFoundException("Department not exist"));
         employee.setName(updateRequest.name());
@@ -111,9 +105,7 @@ public class EmployeeService {
 
     @Transactional
     public void addSkill(Long id, String skillName) {
-        Employee employee = this.employeeRepository.findById(id).orElseThrow(() -> {
-            throw new EmployeeNotFoundException("Employee not found");
-        });
+        Employee employee = this.employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found"));
 
         List<Skill> allSkills = employee.getSkills();
 
@@ -137,10 +129,9 @@ public class EmployeeService {
 
     public List<EmployeeDetailsResponse> getEmployeeDetails() {
         List<Employee> employees = this.employeeRepository.findAllWithDepartment();
-        return employees.stream().map(emp -> {
-            return new EmployeeDetailsResponse(emp.getId(), emp.getName(), emp.getSalary(),
-                    emp.getDepartment().getName());
-        }).toList();
-    }
+        return employees.stream().map(emp -> new EmployeeDetailsResponse(emp.getId(), emp.getName(), emp.getSalary(),
+                emp.getDepartment().getName())
+        ).toList();
 
+    }
 }
