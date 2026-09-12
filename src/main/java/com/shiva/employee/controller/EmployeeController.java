@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shiva.employee.dto.AddSkillRequest;
 import com.shiva.employee.dto.CreateEmployeeRequest;
+import com.shiva.employee.dto.EmployeeDetailsResponse;
 import com.shiva.employee.dto.EmployeeResponse;
 import com.shiva.employee.dto.UpdateEmployeeRequest;
 import com.shiva.employee.service.EmployeeService;
@@ -114,6 +115,11 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeResponse>> searchBySkill(
             @Valid @RequestParam @NotBlank String name) {
         return ResponseEntity.ok(this.employeeService.getBySkill(name));
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<List<EmployeeDetailsResponse>> getEmployeeDetails() {
+        return ResponseEntity.ok(this.employeeService.getEmployeeDetails());
     }
 
 }

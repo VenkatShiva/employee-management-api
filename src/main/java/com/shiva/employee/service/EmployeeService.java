@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.shiva.employee.dto.CreateEmployeeRequest;
+import com.shiva.employee.dto.EmployeeDetailsResponse;
 import com.shiva.employee.dto.EmployeeResponse;
 import com.shiva.employee.dto.UpdateEmployeeRequest;
 import com.shiva.employee.exception.DepartmentNotFoundException;
@@ -132,6 +133,14 @@ public class EmployeeService {
 
     public List<EmployeeResponse> getBySkill(String skillName) {
         return convertEmployeesToResponses(this.employeeRepository.findBySkills_Name(skillName));
+    }
+
+    public List<EmployeeDetailsResponse> getEmployeeDetails() {
+        List<Employee> employees = this.employeeRepository.findAllWithDepartment();
+        return employees.stream().map(emp -> {
+            return new EmployeeDetailsResponse(emp.getId(), emp.getName(), emp.getSalary(),
+                    emp.getDepartment().getName());
+        }).toList();
     }
 
 }

@@ -3,6 +3,7 @@ package com.shiva.employee.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.shiva.employee.model.Employee;
 
@@ -21,5 +22,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByDepartment_NameOrderBySalaryDesc(String department);
 
     List<Employee> findBySkills_Name(String name);
+
+    @Query("SELECT e FROM Employee e JOIN FETCH e.department")
+    List<Employee> findAllWithDepartment();
 
 }
