@@ -61,6 +61,7 @@ public class EmployeeService {
         this.employeeRepository.delete(emp);
     }
 
+    @Transactional
     public void updateEmployee(Long id, UpdateEmployeeRequest updateRequest) {
 
         Employee employee = this.employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found"));
